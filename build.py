@@ -116,7 +116,7 @@ def loaderString(var):
 
 
 def loaderCSS(fn):
-    return re.sub('(?<=url\()([^)#]+)(?=\))', loaderImage, loaderString(fn))
+    return re.sub('(?<=url\()"?([^)#]+?)"?(?=\))', loaderImage, loaderString(fn))
 
 
 def loaderRaw(var):
