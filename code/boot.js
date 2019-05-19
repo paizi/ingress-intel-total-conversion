@@ -680,6 +680,81 @@ window.extendLeaflet = function() {
 
 // BOOTING ///////////////////////////////////////////////////////////
 
+function prepPlugins(bootPlugins) {
+  function prepInfo (data) {
+    if (!data) {
+      return { unknown: true };
+    }
+    var name = data.script && data.script.name;
+    if (name && name.substring(0, 13) === 'IITC plugin: ') {
+      name = name.substring(13);
+    }
+    return {
+      id: data.pluginId,
+      name: name,
+      version: data.script && data.script.version,
+      date: data.dateTimeVersion,
+      buildName: data.buildName
+    }
+  }
+
+  var pluginsInfo = []; // for About IITC
+  pluginsInfo.iitc = prepInfo(script_info);
+
+  function safeSetup (setup) {
+    if (!setup) {
+      console.error('plugin must provide setup function');
+    }
+    var info = prepInfo(setup.info);
+    pluginsInfo.push(info);
+    try {
+      setup.call(this);
+    } catch (err) {
+      console.error('error starting plugin: ' + (info.name || info.id) + ', error: ' + err);
+      info.error = err;
+    }
+  }
+
+  var priorities = {
+    lowest: 100,
+    low: 75,
+    normal: 50,
+    high: 25,
+    highest: 0,
+    map: -25,
+    boot: -50
+  }
+  function getPriority (data) {
+    var v = data && data.priority;
+    var prio = priorities[v || 'normal'] || v;
+    if (typeof prio !== 'number') {
+      console.warn('wrong plugin priority specified: ', v);
+      prio = priorities.normal;
+    }
+    return prio;
+  }
+
+  if (bootPlugins) {
+    bootPlugins.sort(function (a,b) {
+      return getPriority(a) - getPriority(b);
+    });
+  } else {
+    bootPlugins = [];
+  }
+
+  bootPlugins.current = 0;
+  bootPlugins.load = function (prio) {
+    for (var i=this.current; i<this.length; i++) {
+      if (prio && getPriority(this[i]) > priorities[prio]) { break; }
+      safeSetup(this[i]);
+    };
+    bootPlugins.current = i;
+  };
+
+  bootPlugins.info = pluginsInfo;
+  return bootPlugins;
+}
+
 function boot() {
   if(!isSmartphone()) // TODO remove completely?
     window.debug.console.overwriteNativeIfRequired();
@@ -687,6 +762,10 @@ function boot() {
   console.log('loading done, booting. Built: @@BUILDDATE@@');
   if(window.deviceID) console.log('Your device ID: ' + window.deviceID);
   window.runOnSmartphonesBeforeBoot();
+
+  var bootPlugins = prepPlugins(window.bootPlugins);
+  bootPlugins.load('boot');
+
   window.extendLeaflet();
   window.extractFromStock();
   window.setupIdle();
@@ -695,6 +774,9 @@ function boot() {
   window.setupIcons();
   window.setupDialogs();
   window.setupDataTileParams();
+
+  bootPlugins.load('map');
+
   window.setupMap();
   window.setupOMS();
   window.search.setup();
@@ -722,16 +804,8 @@ function boot() {
 
   $('#sidebar').show();
 
-  if(window.bootPlugins) {
-    $.each(window.bootPlugins, function(ind, ref) {
-      try {
-        ref();
-      } catch(err) {
-        console.error("error starting plugin: index "+ind+", error: "+err);
-        debugger;
-      }
-    });
-  }
+  bootPlugins.load();
+  bootPlugins.length = 0;
 
   window.setMapBaseLayer();
   window.setupLayerChooserApi();

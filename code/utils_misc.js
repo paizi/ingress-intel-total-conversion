@@ -1,36 +1,30 @@
 // UTILS + MISC  ///////////////////////////////////////////////////////
 
 window.aboutIITC = function() {
-  var v = (script_info.script && script_info.script.version || script_info.dateTimeVersion) + ' ['+script_info.buildName+']';
+  var pluginsInfo = window.bootPlugins.info;
+  var v = (pluginsInfo.iitc.version || pluginsInfo.iitc.date) + ' [' + pluginsInfo.iitc.buildName + ']';
   if (typeof android !== 'undefined' && android && android.getVersionName) {
     v += '[IITC Mobile '+android.getVersionName()+']';
   }
 
-  if (window.bootPlugins) {
-    var plugins = '<ul>';
-    for(var i in bootPlugins) {
-      var info = bootPlugins[ i ].info;
-      if(info) {
-        var pname = info.script && info.script.name || info.pluginId;
-        if(pname.substr(0, 13) == 'IITC plugin: ' || pname.substr(0, 13) == 'IITC Plugin: ') {
-          pname = pname.substr(13);
-        }
-        var pvers = info.script && info.script.version || info.dateTimeVersion;
-      
-        var ptext = pname + ' - ' + pvers;
-        if(info.buildName != script_info.buildName) {
-          ptext += ' [' + (info.buildName || '<i>non-standard plugin</i>') + ']';
-        }
-      
-        plugins += '<li>' + ptext + '</li>';
-      } else {
-        // no 'info' property of the plugin setup function - old plugin wrapper code
-        // could attempt to find the "window.plugin.NAME = function() {};" line it's likely to have..?
-        plugins += '<li>(unknown plugin: index ' + i + ')</li>';
-      }
+  var plugins = pluginsInfo.map(function (p, idx) {
+    if (p.unknown) {
+      return '<li>(unknown plugin: index ' + idx + ')</li>';
     }
-    plugins += '</ul>';
-  }
+    var pname = p.name || p.pluginId;
+    var pvers = p.version || p.dateTimeVersion;
+    var ptext = pname + ' - ' + pvers;
+    if (p.buildName !== pluginsInfo.iitc.buildName) {
+      ptext += ' [' + (p.buildName || '<i>non-standard plugin</i>') + ']';
+    }
+    if (p.error) {
+       ptext = L.Util.template('<span style="text-decoration: line-through;" title="{title}">{text}</span>', {
+         title: p.error,
+         text: ptext
+       });
+    }
+    return '<li>' + ptext + '</li>';
+  }).join('');
 
   var a = ''
   + '  <div><b>About IITC</b></div> '
@@ -49,8 +43,8 @@ window.aboutIITC = function() {
   + '  </div>'
   + '  <hr>'
   + '  <div>Version: ' + v + '</div>';
-  if (window.bootPlugins && window.bootPlugins.length > 0) {
-    a += '  <div>Plugins: ' + plugins + '</div>';
+  if (plugins) {
+    a += '  <div>Plugins: <ul>' + plugins + '</ul></div>';
   }
 
   dialog({
