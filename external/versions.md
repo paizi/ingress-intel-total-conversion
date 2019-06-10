@@ -36,8 +36,8 @@
   used in: draw-tools
 
 * https://github.com/shramov/leaflet-plugins/
-  3.0.3
-  * Bing.js: 14b845bba7f6e7bc0309f37c66f59bceb801bb68
+  3.1.0
+  * Bing.js: d169e06d44f47485bd6f66a6c25efcb19de87478
     used in: basemap-bing
   * Yandex.js: 21998f069d00952807ae070fb5b5c9992e7a6c1f
     used in: basemap-yandex
