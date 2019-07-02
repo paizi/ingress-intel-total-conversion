@@ -39,7 +39,7 @@
   3.1.0
   * Bing.js: d169e06d44f47485bd6f66a6c25efcb19de87478
     used in: basemap-bing
-  * Yandex.js: 21998f069d00952807ae070fb5b5c9992e7a6c1f
+  * Yandex.js, Yandex.addon.LoadApi.js: ed47982c0c2c9037d74557ae46783e0f294a201b
     used in: basemap-yandex
 
 * https://github.com/makinacorpus/Leaflet.FileLayer
