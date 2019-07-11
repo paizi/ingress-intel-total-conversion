@@ -22,7 +22,7 @@ public class ForceUpdatePreference extends Preference {
                 .setTitle(R.string.pref_force_plugin_update)
                 .setMessage(R.string.pref_force_plugin_update_sum)
                 .setCancelable(true)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         PreferenceManager.getDefaultSharedPreferences(getContext())
@@ -32,7 +32,7 @@ public class ForceUpdatePreference extends Preference {
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();

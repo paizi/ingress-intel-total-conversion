@@ -483,7 +483,7 @@ public class IITC_Mobile extends AppCompatActivity
             super.onBackPressed();
         } else {
             mBackButtonPressed = true;
-            Toast.makeText(this, "Press twice to exit", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "再按一下退出", Toast.LENGTH_SHORT).show();
             // reset back button after 2 seconds
             new Handler().postDelayed(new Runnable() {
                 @Override

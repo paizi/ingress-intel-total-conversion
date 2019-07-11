@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="pref_hide_fullscreen">
-        <item>System Notification Bar</item>
-        <item>IITC Action Bar</item>
-        <item>IITC Status Bar</item>
-        <item>System Navigation Bar</item>
+        <item>系统通知栏</item>
+        <item>IITC动作栏</item>
+        <item>IITC状态栏</item>
+        <item>系统导航栏</item>
     </string-array>
     <string-array name="pref_hide_fullscreen_vals">
         <item>2</item>
@@ -37,9 +37,9 @@
     </string-array>
 
     <string-array name="pref_user_location_titles">
-        <item>Don\'t show user position</item>
-        <item>Show user position on map</item>
-        <item>Show user position and orientation on map</item>
+        <item>不显示用户位置</item>
+        <item>在地图上显示用户位置</item>
+        <item>在地图上显示用户位置和方向</item>
     </string-array>
     <string-array name="pref_user_location_values">
         <item>0</item>
@@ -49,10 +49,10 @@
 
     <string-array name="pref_update_plugins_interval_titles">
         <item>Disable</item>
-        <item>1 day</item>
-        <item>2 days</item>
-        <item>1 week</item>
-        <item>2 weeks</item>
+        <item>1天</item>
+        <item>2天</item>
+        <item>1周</item>
+        <item>2周</item>
     </string-array>
 
     <string-array name="pref_update_plugins_interval_values">
