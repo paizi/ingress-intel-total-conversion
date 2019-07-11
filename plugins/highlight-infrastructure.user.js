@@ -1,13 +1,30 @@
 // ==UserScript==
 // @id             iitc-plugin-highlight-portal-infrastructure@vita10gy
-// @name           IITC plugin: Highlight portals with infrastructure problems
-// @category       Highlighter
-// @version        0.2.1.@@DATETIMEVERSION@@
-// @description    [@@BUILDNAME@@-@@BUILDDATE@@] Use the portal fill color to denote if the portal has any infrastructure problems. Red: no picture. Yellow: potential title issue. Orange:  both of these.
-@@METAINFO@@
+// @name           IITC plugin: 突出显示具有基础结构问题的Portal
+// @category       高亮
+// @version        0.2.1.20190616.73555
+// @description    [mobile-2019-06-16-073555] 填充颜色表示portal是否存在任何基础结构问题。 红色：没有图片。 黄色：标题有潜在问题。 橙色：两者皆有。
+// @updateURL      none
+// @downloadURL    none
+// @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
+// @include        https://intel.ingress.com/*
+// @match          https://intel.ingress.com/*
+// @grant          none
 // ==/UserScript==
 
-@@PLUGINSTART@@
+
+function wrapper(plugin_info) {
+// ensure plugin framework is there, even if iitc is not yet loaded
+if(typeof window.plugin !== 'function') window.plugin = function() {};
+
+//PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
+//(leaving them in place might break the 'About IITC' page or break update checks)
+plugin_info.buildName = 'mobile';
+plugin_info.dateTimeVersion = '20190616.73555';
+plugin_info.pluginId = 'highlight-infrastructure';
+//END PLUGIN AUTHORS NOTE
+
+
 
 // PLUGIN START ////////////////////////////////////////////////////////
 
@@ -50,4 +67,18 @@ var setup =  function() {
 
 // PLUGIN END //////////////////////////////////////////////////////////
 
-@@PLUGINEND@@
+
+setup.info = plugin_info; //add the script info data to the function as a property
+if(!window.bootPlugins) window.bootPlugins = [];
+window.bootPlugins.push(setup);
+// if IITC has already booted, immediately run the 'setup' function
+if(window.iitcLoaded && typeof setup === 'function') setup();
+} // wrapper end
+// inject code into site context
+var script = document.createElement('script');
+var info = {};
+if (typeof GM_info !== 'undefined' && GM_info && GM_info.script) info.script = { version: GM_info.script.version, name: GM_info.script.name, description: GM_info.script.description };
+script.appendChild(document.createTextNode('('+ wrapper +')('+JSON.stringify(info)+');'));
+(document.body || document.head || document.documentElement).appendChild(script);
+
+

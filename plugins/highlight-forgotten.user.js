@@ -1,13 +1,30 @@
 // ==UserScript==
 // @id             iitc-plugin-highlight-forgotten@jonatkins
-// @name           IITC plugin: Highlight inactive portals
-// @category       Highlighter
-// @version        0.1.0.@@DATETIMEVERSION@@
-// @description    [@@BUILDNAME@@-@@BUILDDATE@@] Use the portal fill color to denote if the portal is unclaimed with no recent activity. Shades of red from one week to one month, then tinted to purple for longer. May also highlight captured portals that are stuck and fail to decay every 24 hours.
-@@METAINFO@@
+// @name           IITC plugin: 突出显示非活动Portal
+// @category       高亮
+// @version        0.1.0.20190616.73555
+// @description    [mobile-2019-06-16-073555] 将portal填充颜色表示portal是否无人占领且近期没有活动。 红色阴影表示一周到一个月，紫色表示更长时间。
+// @updateURL      none
+// @downloadURL    none
+// @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
+// @include        https://intel.ingress.com/*
+// @match          https://intel.ingress.com/*
+// @grant          none
 // ==/UserScript==
 
-@@PLUGINSTART@@
+
+function wrapper(plugin_info) {
+// ensure plugin framework is there, even if iitc is not yet loaded
+if(typeof window.plugin !== 'function') window.plugin = function() {};
+
+//PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
+//(leaving them in place might break the 'About IITC' page or break update checks)
+plugin_info.buildName = 'mobile';
+plugin_info.dateTimeVersion = '20190616.73555';
+plugin_info.pluginId = 'highlight-forgotten';
+//END PLUGIN AUTHORS NOTE
+
+
 
 // PLUGIN START ////////////////////////////////////////////////////////
 
@@ -42,4 +59,18 @@ var setup =  function() {
 
 // PLUGIN END //////////////////////////////////////////////////////////
 
-@@PLUGINEND@@
+
+setup.info = plugin_info; //add the script info data to the function as a property
+if(!window.bootPlugins) window.bootPlugins = [];
+window.bootPlugins.push(setup);
+// if IITC has already booted, immediately run the 'setup' function
+if(window.iitcLoaded && typeof setup === 'function') setup();
+} // wrapper end
+// inject code into site context
+var script = document.createElement('script');
+var info = {};
+if (typeof GM_info !== 'undefined' && GM_info && GM_info.script) info.script = { version: GM_info.script.version, name: GM_info.script.name, description: GM_info.script.description };
+script.appendChild(document.createTextNode('('+ wrapper +')('+JSON.stringify(info)+');'));
+(document.body || document.head || document.documentElement).appendChild(script);
+
+

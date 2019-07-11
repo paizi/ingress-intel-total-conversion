@@ -1,13 +1,30 @@
 // ==UserScript==
 // @id             iitc-plugin-show-linked-portals@fstopienski
-// @name           IITC plugin: Linked portals
-// @category       Portal Info
-// @version        0.3.2.@@DATETIMEVERSION@@
-// @description    [@@BUILDNAME@@-@@BUILDDATE@@] Try to show the linked portals (image, name and link direction) in portal detail view and jump to linked portal on click.  Some details may not be available if the linked portal is not in the current view.
-@@METAINFO@@
+// @name           IITC plugin: 链接的Portal
+// @category       Portal信息
+// @version        0.3.2.20190616.73555
+// @description    [mobile-2019-06-16-073555] 尝试在portal详细信息视图中显示其链接的其他portal（图像，名称和链接方向），并在单击时跳转到链接的portal。 如果链接的portal不在当前视图中，则某些详细信息可能不可用.
+// @updateURL      none
+// @downloadURL    none
+// @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
+// @include        https://intel.ingress.com/*
+// @match          https://intel.ingress.com/*
+// @grant          none
 // ==/UserScript==
 
-@@PLUGINSTART@@
+
+function wrapper(plugin_info) {
+// ensure plugin framework is there, even if iitc is not yet loaded
+if(typeof window.plugin !== 'function') window.plugin = function() {};
+
+//PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
+//(leaving them in place might break the 'About IITC' page or break update checks)
+plugin_info.buildName = 'mobile';
+plugin_info.dateTimeVersion = '20190616.73555';
+plugin_info.pluginId = 'linked-portals-show';
+//END PLUGIN AUTHORS NOTE
+
+
 
 // PLUGIN START ////////////////////////////////////////////////////////
 
@@ -174,9 +191,103 @@ plugin.showLinkedPortal.removePreview = function() {
 
 var setup = function () {
   window.addHook('portalDetailsUpdated', window.plugin.showLinkedPortal.portalDetail);
-  $('<style>').prop('type', 'text/css').html('@@INCLUDESTRING:plugins/linked-portals-show.css@@').appendTo('head');
+  $('<style>').prop('type', 'text/css').html('#level {\
+	text-align: center;\
+	margin-right: -0.5em;\
+	position: relative;\
+	right: 50%;\
+	width: 1em;\
+}\
+.showLinkedPortalLink {\
+	cursor: pointer;\
+	position: absolute;\
+	height: 40px;\
+	width: 50px;\
+	border-width: 1px;\
+	overflow: hidden;\
+	text-align: center;\
+	background: #0e3d4e;\
+}\
+.showLinkedPortalLink .minImg {\
+	height: 40px;\
+}\
+.showLinkedPortalLink.outOfRange span {\
+	display: block;\
+	line-height: 13px;\
+	font-size: 10px;\
+}\
+.showLinkedPortalOverflow {\
+	left: 50%;\
+	margin-left:-25px;\
+	cursor: default;\
+}\
+\
+.showLinkedPortalLink1, .showLinkedPortalLink2, .showLinkedPortalLink3, .showLinkedPortalLink4 {\
+	left: 5px;\
+}\
+.showLinkedPortalLink5, .showLinkedPortalLink6, .showLinkedPortalLink7, .showLinkedPortalLink8 {\
+	right: 5px;\
+}\
+.showLinkedPortalLink9, .showLinkedPortalLink10, .showLinkedPortalLink11, .showLinkedPortalLink12 {\
+	left: 59px;\
+}\
+.showLinkedPortalLink13, .showLinkedPortalLink14, .showLinkedPortalLink15, .showLinkedPortalLink16 {\
+	right: 59px\
+}\
+\
+.showLinkedPortalLink1, .showLinkedPortalLink5, .showLinkedPortalLink9, .showLinkedPortalLink13 {\
+	top: 23px;\
+}\
+.showLinkedPortalLink2, .showLinkedPortalLink6, .showLinkedPortalLink10, .showLinkedPortalLink14 {\
+	top: 72px;\
+}\
+.showLinkedPortalLink3, .showLinkedPortalLink7, .showLinkedPortalLink11, .showLinkedPortalLink15 {\
+	top: 122px;\
+}\
+.showLinkedPortalLink4, .showLinkedPortalLink8, .showLinkedPortalLink12, .showLinkedPortalLink16,\
+.showLinkedPortalOverflow {\
+	top: 171px;\
+}\
+\
+.showLinkedPortalLink.incoming::before, .showLinkedPortalLink.outgoing::before {\
+	position: absolute;\
+	bottom: 0;\
+	right: 0;\
+	width: 11px;\
+	height: 15px;\
+	text-shadow: 0 0 2px #000;\
+}\
+\
+.showLinkedPortalLink.incoming {\
+	border-style: dotted;\
+}\
+.showLinkedPortalLink.incoming::before {\
+	content: "↳";\
+}\
+\
+.showLinkedPortalLink.outgoing {\
+	border-style: dashed;\
+}\
+.showLinkedPortalLink.outgoing::before {\
+	content: "↴";\
+}\
+').appendTo('head');
 }
 
 // PLUGIN END //////////////////////////////////////////////////////////
 
-@@PLUGINEND@@
+
+setup.info = plugin_info; //add the script info data to the function as a property
+if(!window.bootPlugins) window.bootPlugins = [];
+window.bootPlugins.push(setup);
+// if IITC has already booted, immediately run the 'setup' function
+if(window.iitcLoaded && typeof setup === 'function') setup();
+} // wrapper end
+// inject code into site context
+var script = document.createElement('script');
+var info = {};
+if (typeof GM_info !== 'undefined' && GM_info && GM_info.script) info.script = { version: GM_info.script.version, name: GM_info.script.name, description: GM_info.script.description };
+script.appendChild(document.createTextNode('('+ wrapper +')('+JSON.stringify(info)+');'));
+(document.body || document.head || document.documentElement).appendChild(script);
+
+

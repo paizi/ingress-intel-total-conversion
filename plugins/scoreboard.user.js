@@ -1,14 +1,31 @@
 // ==UserScript==
 // @id             iitc-plugin-scoreboard@vita10gy
-// @name           IITC plugin: Localized scoreboard
-// @version        0.2.0.@@DATETIMEVERSION@@
+// @name           IITC plugin: 本地计分板
+// @version        0.2.0.20190616.73555
 // @category       Info
-// @description    [@@BUILDNAME@@-@@BUILDDATE@@] Display a scoreboard about all visible portals with statistics about both teams,like average portal level,link & field counts etc.
-@@METAINFO@@
+// @description    [mobile-2019-06-16-073555] 显示有关所有可见portal的记分板，其中包含有关两个阵营的统计信息，例如平均portal级别，链接和fields计数等。
+// @updateURL      none
+// @downloadURL    none
+// @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
+// @include        https://intel.ingress.com/*
+// @match          https://intel.ingress.com/*
+// @grant          none
 // ==/UserScript==
     
 	
-	@@PLUGINSTART@@
+	
+function wrapper(plugin_info) {
+// ensure plugin framework is there, even if iitc is not yet loaded
+if(typeof window.plugin !== 'function') window.plugin = function() {};
+
+//PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
+//(leaving them in place might break the 'About IITC' page or break update checks)
+plugin_info.buildName = 'mobile';
+plugin_info.dateTimeVersion = '20190616.73555';
+plugin_info.pluginId = 'scoreboard';
+//END PLUGIN AUTHORS NOTE
+
+
     // PLUGIN START //
     
     // use own namespace for plugin
@@ -275,6 +292,20 @@
     
     
     // PLUGIN END //////////////////////////////////////////////////////////
-    @@PLUGINEND@@
+    
+setup.info = plugin_info; //add the script info data to the function as a property
+if(!window.bootPlugins) window.bootPlugins = [];
+window.bootPlugins.push(setup);
+// if IITC has already booted, immediately run the 'setup' function
+if(window.iitcLoaded && typeof setup === 'function') setup();
+} // wrapper end
+// inject code into site context
+var script = document.createElement('script');
+var info = {};
+if (typeof GM_info !== 'undefined' && GM_info && GM_info.script) info.script = { version: GM_info.script.version, name: GM_info.script.name, description: GM_info.script.description };
+script.appendChild(document.createTextNode('('+ wrapper +')('+JSON.stringify(info)+');'));
+(document.body || document.head || document.documentElement).appendChild(script);
+
+
 
     

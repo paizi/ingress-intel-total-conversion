@@ -1,13 +1,30 @@
 // ==UserScript==
 // @id             iitc-plugin-missions@jonatkins
-// @name           IITC plugin: Missions
-// @category       Info
-// @version        0.1.2.@@DATETIMEVERSION@@
-// @description    [@@BUILDNAME@@-@@BUILDDATE@@] View missions. Marking progress on waypoints/missions basis. Showing mission paths on the map.
-@@METAINFO@@
+// @name           IITC plugin: 任务
+// @category       信息
+// @version        0.1.2.20190616.73555
+// @description    [mobile-2019-06-16-073555] 查看任务。 在导航点/任务基础上标记进展情况。在地图上显示任务路径。
+// @updateURL      none
+// @downloadURL    none
+// @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
+// @include        https://intel.ingress.com/*
+// @match          https://intel.ingress.com/*
+// @grant          none
 // ==/UserScript==
 
-@@PLUGINSTART@@
+
+function wrapper(plugin_info) {
+// ensure plugin framework is there, even if iitc is not yet loaded
+if(typeof window.plugin !== 'function') window.plugin = function() {};
+
+//PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
+//(leaving them in place might break the 'About IITC' page or break update checks)
+plugin_info.buildName = 'mobile';
+plugin_info.dateTimeVersion = '20190616.73555';
+plugin_info.pluginId = 'missions';
+//END PLUGIN AUTHORS NOTE
+
+
 
 // PLUGIN START ////////////////////////////////////////////////////////
 
@@ -76,10 +93,10 @@ window.plugin.missions = {
 	enableSync: false,
 
 	missionTypeImages: [
-		'@@INCLUDEIMAGE:images/mission-type-unknown.png@@',
-		'@@INCLUDEIMAGE:images/mission-type-sequential.png@@',
-		'@@INCLUDEIMAGE:images/mission-type-random.png@@',
-		'@@INCLUDEIMAGE:images/mission-type-hidden.png@@',
+		'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASAQMAAABsABwUAAAABlBMVEWN+1Sx+/dsz4yeAAAAAXRSTlMAQObYZgAAAClJREFUCNdjYIACxgcMDOwfGBjYKoAcCyCugOIPEDnGAxAMVnsAlQ8EAEkHCRVXxWK2AAAAAElFTkSuQmCC',
+		'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASAQMAAABsABwUAAAABlBMVEUAAACy+/gnk9HpAAAAAXRSTlMAQObYZgAAAB9JREFUCNdjYMAGBIBYAohlGBju/zsAxiA2WEwAqw4Az84Fw61PmPwAAAAASUVORK5CYII=',
+		'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASAQMAAABsABwUAAAABlBMVEUAAACy+/gnk9HpAAAAAXRSTlMAQObYZgAAAClJREFUCNdjYACBB0gYCBgFIJiJA4JZWCCYgwmCQaCA8QBD+d8DYBoIAN15B5HS9gdlAAAAAElFTkSuQmCC',
+		'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASAQMAAABsABwUAAAABlBMVEWq+02y+/jJjgLNAAAAAXRSTlMAQObYZgAAADdJREFUCNdjYAAC9gMMDDwPgIwEIAbSjA0MDMwgzADBIMAsAMQSQIYMA8P9fwfAGMRmAIkJMAAAQKIJxqg43P4AAAAASUVORK5CYII=',
 	],
 
 	onPortalSelected: function(event) {
@@ -388,7 +405,7 @@ window.plugin.missions = {
 				infoLength.title = 'Length of this mission.\n\nNOTE: The actual distance required to cover may vary depending on several factors!';
 				infoLength.textContent = len;
 				img = infoLength.insertBefore(document.createElement('img'), infoLength.firstChild);
-				img.src = '@@INCLUDEIMAGE:images/mission-length.png@@';
+				img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASAQMAAABsABwUAAAABlBMVEUAAACy+/gnk9HpAAAAAXRSTlMAQObYZgAAABVJREFUCNdjYEADB9Dg//8QjA7RAAB2VBF9TkATUAAAAABJRU5ErkJggg==';
 			}
 			
 			if(window.plugin.distanceToPortal && window.plugin.distanceToPortal.currentLoc) {
@@ -994,7 +1011,180 @@ window.plugin.missions = {
 
 		this.loadData();
 
-		$('<style>').prop('type', 'text/css').html('@@INCLUDESTRING:plugins/missions.css@@').appendTo('head');
+		$('<style>').prop('type', 'text/css').html('.plugin-mission-pane {\
+	background: transparent;\
+	border: 0 none !important;\
+	height: 100% !important;\
+	width: 100% !important;\
+	left: 0 !important;\
+	top: 0 !important;\
+	position: absolute;\
+	overflow: auto;\
+}\
+.plugin-mission-pane > button {\
+	padding: 0.3em 2em;\
+}\
+\
+.plugin-mission-summary {\
+	padding: 5px;\
+	border-top: black solid 1px;\
+	min-height: 50px;\
+	position: relative;\
+	clear: left;\
+}\
+.plugin-mission-summary.checked::after {\
+	content: "✓";\
+	display: block;\
+	pointer-events: none;\
+	position: absolute;\
+	text-align: center;\
+	color: rgba(255, 187, 0, 0.3);\
+	left: 5px;\
+	top: 5px;\
+	font-size: 50px;\
+	line-height: 50px;\
+	width: 50px;\
+}\
+.plugin-mission-summary:first-child {\
+	border-top-width: 0px;\
+}\
+\
+.plugin-mission-summary.checked {\
+	background-color: rgba(255, 187, 0, 0.3);\
+}\
+\
+.plugin-mission-summary > img {\
+	float: left;\
+	cursor: pointer;\
+	width: 50px;\
+	margin-right: 10px;\
+	margin-bottom: 5px;\
+}\
+\
+.plugin-mission-summary > a {\
+	display: block;\
+	font-weight: bold;\
+	font-size: 1.3em;\
+	margin: 0 0 2px 60px;\
+}\
+\
+.plugin-mission-summary > br {\
+	margin-bottom: 2px;\
+}\
+\
+.plugin-mission-summary > .nickname {\
+	display: inline-block;\
+	box-sizing: border-box;\
+	min-width: 8em; /* to align with time */\
+	padding-right: 0.2em;\
+}\
+\
+.plugin-mission-info .portal-distance-bearing {\
+	font-size: 14px;\
+	margin-right: 8px;\
+	color: #b2fbff;\
+}\
+\
+.plugin-mission-info {\
+	display: inline-block;\
+}\
+.plugin-mission-info.length   { min-width: 6em; }\
+.plugin-mission-info.distance { min-width: 6em; }\
+.plugin-mission-info.time     { min-width: 8em; }\
+.plugin-mission-info.rating   { min-width: 6em; }\
+.plugin-mission-info.players  { min-width: 4em; }\
+.plugin-mission-info.type     { min-width: 4em; }\
+\
+.plugin-mission-info img {\
+	height: 14px;\
+	margin-right: 8px;\
+	vertical-align: top;\
+}\
+.plugin-mission-info.players img {\
+	padding: 0 3px; /* the icon is 12x18 */\
+}\
+\
+.plugin-mission-details .plugin-mission-summary > a,\
+.plugin-mission-details .plugin-mission-summary .description {\
+	white-space: pre-line;\
+	margin-left: 110px;\
+}\
+\
+.plugin-mission-details .plugin-mission-summary.checked::after {\
+	left: 0px;\
+	top: 0px;\
+	font-size: 100px;\
+	line-height: 100px;\
+	width: 100px;\
+}\
+\
+.plugin-mission-details .plugin-mission-summary {\
+	padding: 0;\
+	background-color: transparent;\
+}\
+\
+.plugin-mission-details .plugin-mission-summary > img {\
+	width: 100px;\
+}\
+\
+.plugin-mission-details ol {\
+	clear: left;\
+	list-style: none;\
+	margin: 10px 0 0;\
+	padding: 0;\
+}\
+\
+.plugin-mission-portal-indicator {\
+	position: relative;\
+	text-align: center;\
+	float: left;\
+	line-height: 18px;\
+	height: 18px;\
+	width: 18px;\
+	margin-right: 5px;\
+}\
+\
+.plugin-mission-portal-indicator div {\
+	border-color: currentcolor transparent transparent;\
+	border-style: solid;\
+	border-width: 2px 1px;\
+	box-sizing: border-box;\
+	height: 0;\
+	left: 6px;\
+	position: absolute;\
+	top: 0;\
+	/* Firefox supports transform* without vendor prefix, but Android does not yet */\
+	transform-origin: 4px 9px 0;\
+	-webkit-transform-origin: 4px 9px 0;\
+	width: 8px;\
+}\
+\
+.plugin-mission-waypoint.unavailable {\
+	text-decoration: line-through;\
+}\
+.plugin-mission-waypoint .title {\
+	font-size: 18px;\
+	font-weight: bold;\
+}\
+.plugin-mission-waypoint label {\
+	clear: left;\
+	display: block;\
+}\
+.plugin-mission-waypoint input {\
+	box-sizing: border-box;\
+	margin: 3px 5px 8px 0;\
+	width: 18px;\
+}\
+\
+.plugin-mission-search-result-desc {\
+	display: block;\
+	max-height: 2em;\
+	overflow: hidden;\
+	text-overflow: ellipsis;\
+	white-space: nowrap;\
+}\
+\
+').appendTo('head');
 		$('#toolbox').append('<a tabindex="0" onclick="plugin.missions.openTopMissions();">Missions in view</a>');
 
 		if(window.useAndroidPanes()) {
@@ -1086,4 +1276,18 @@ var setup = window.plugin.missions.setup.bind(window.plugin.missions);
 
 // PLUGIN END //////////////////////////////////////////////////////////
 
-@@PLUGINEND@@
+
+setup.info = plugin_info; //add the script info data to the function as a property
+if(!window.bootPlugins) window.bootPlugins = [];
+window.bootPlugins.push(setup);
+// if IITC has already booted, immediately run the 'setup' function
+if(window.iitcLoaded && typeof setup === 'function') setup();
+} // wrapper end
+// inject code into site context
+var script = document.createElement('script');
+var info = {};
+if (typeof GM_info !== 'undefined' && GM_info && GM_info.script) info.script = { version: GM_info.script.version, name: GM_info.script.name, description: GM_info.script.description };
+script.appendChild(document.createTextNode('('+ wrapper +')('+JSON.stringify(info)+');'));
+(document.body || document.head || document.documentElement).appendChild(script);
+
+

@@ -1,13 +1,30 @@
 // ==UserScript==
 // @id             iitc-plugin-bookmarks@ZasoGD
-// @name           IITC plugin: Bookmarks for maps and portals
-// @category       Controls
-// @version        0.2.12.@@DATETIMEVERSION@@
-// @description    [@@BUILDNAME@@-@@BUILDDATE@@] Save your favorite Maps and Portals and move the intel map with a click. Works with sync.
-@@METAINFO@@
+// @name           IITC plugin: 地图和Portals书签
+// @category       控制
+// @version        0.2.12.20190616.73555
+// @description    [mobile-2019-06-16-073555] 保存您喜欢的地图和Portals，然后单击即可移动intel地图。 适用于sync插件。
+// @updateURL      none
+// @downloadURL    none
+// @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
+// @include        https://intel.ingress.com/*
+// @match          https://intel.ingress.com/*
+// @grant          none
 // ==/UserScript==
 
-@@PLUGINSTART@@
+
+function wrapper(plugin_info) {
+// ensure plugin framework is there, even if iitc is not yet loaded
+if(typeof window.plugin !== 'function') window.plugin = function() {};
+
+//PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
+//(leaving them in place might break the 'About IITC' page or break update checks)
+plugin_info.buildName = 'mobile';
+plugin_info.dateTimeVersion = '20190616.73555';
+plugin_info.pluginId = 'bookmarks';
+//END PLUGIN AUTHORS NOTE
+
+
 
 // PLUGIN START ////////////////////////////////////////////////////////
 /***********************************************************************
@@ -508,7 +525,7 @@
         query.addResult({
           title: escapeHtmlSpecialChars(bookmark.label),
           description: 'Map in folder "' + escapeHtmlSpecialChars(folder.label) + '"',
-          icon: '@@INCLUDEIMAGE:images/icon-bookmark-map.png@@',
+          icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAADYSURBVCiRldExLoRxEAXw33xZ4QIKB9BQWPl0yFKJA4hCo1CqXMABVA6gcgkFnc7/s7VQaByAgoYdhU3sZr9NmGSaee/NvJeJUkr6R3WgrusYm/ajJ7zr5t3ouGmarFrXpFPpuA2aFDSxIWxjXz/mWy25jx3hEAsqS0NsFi/68YxHlXPK8MKbGwR6GN06g0XhwYrrX0tb+enJAS5b8pzp5gk5GM+wl1/C1YQgfEwPPbA+JN3iAgMsTxeEOWlXNzet5pHKGl7HOKWUzEx/6VJKdvj54IT3KfUNvrNZ/jYm+uoAAAAASUVORK5CYII=',
           position: L.latLng(bookmark.latlng.split(",")),
           zoom: bookmark.z,
           onSelected: window.plugin.bookmarks.onSearchResultSelected,
@@ -523,7 +540,7 @@
         query.addResult({
           title: escapeHtmlSpecialChars(bookmark.label),
           description: 'Bookmark in folder "' + escapeHtmlSpecialChars(folder.label) + '"',
-          icon: '@@INCLUDEIMAGE:images/icon-bookmark.png@@',
+          icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAADFSURBVCiRrdEtTkMBEATgb19C0gsgEEgMFW2TooAURzgACoNAorgAB6jqAVBcghBQYPmxBAQeBYYQ4C2CJvTlPUibMG53ZpKZ3chMs6Bo3N7EwG2sTG9Ih9J+ExW1SFexpnCBNyzq5VPdcB2bwi4WsIz5Mf+OR9wrjHTy9DvSi3MEBhNimMOScKfj7KfDRn54sIPjhj5D3Twgy2rp7fwUTuotvU6O1SuVVseiSxyhRPt3Q2hJW7q5rpd7Cn08VyT/8+k/8AVY7Dd1pA43RAAAAABJRU5ErkJggg==',
           position: L.latLng(bookmark.latlng.split(",")),
           guid: bookmark.guid,
           onSelected: window.plugin.bookmarks.onSearchResultSelected,
@@ -1096,7 +1113,7 @@
     var star = L.marker(latlng, {
       title: lbl,
       icon: L.icon({
-        iconUrl: '@@INCLUDEIMAGE:images/marker-star.png@@',
+        iconUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAoCAMAAACo9wirAAAAzFBMVEXbuTR9YwDd0T+ulyry2VDt53/s5Jv34a+tmUbJtGRtVwAtJADg14j304viyIZeSwDXyH5IOQD07JLPvnhqVQBuWACmkjpgTQBxWwC4p1WchikRDQCPdxeBaAQTDwADAgAOCwAAAAAAAAAAAAALCQAAAAAAAAAAAAD9+Jb97IT+3VT9+WH+0i3993D+80793Yr/yXL+5Tr+6XL+zEP/z2X+vSX+zB/+52L/qw393SX89xr9+yv/siP/vUf9+Dv+20P+rgH+xQv+vgH+twNAe/b8AAAAKHRSTlPywvLj+vn4/OLrqFb0/PSS8Hb77meB4FGX5t1A2dUkEy8HDQoaAwEAoclaPQAAAo1JREFUeF5VkeeyozAMRrPphdwkdIxpBu7SSe/llvd/p5VxlMx+PxiMzhxJuPX3mc/PzzgIQwYJwyCGoyggwMuRav6BmKrLGgQBrBvUkuQkkSWLGh5DooX1UNWlXplDyp6kq5EXCqL1qlu9srpfIPeq7FmaIBCIA9WScyjznC/3XOZEEAsABIFBoH6GUrt9v5zPQEAXFoCiAWLPkUqon+8lIbl4kRwfmggABFZSXXh9PhbopUos1fWCBoAJnT4MCMMlZLHQE/Hed/wIFA3gkiSvqjLtK45tO/N+WlZVnhA7YgKAFZK83dGJM5v4rmFSonfaeWotoEcDhJqSVl06W0A5gviTGelWqTJzvZADcWjO11XVIzPbjzzGPFfT4bxWTD8SAANgtTrIQ8eF3QPmDOXDarWej/mUL+C0SgfU91gcR3TAj42BNQDMAMDpwBfzwjCi/cMJgNFMGGBIY5g+AACnrWl+NJay0+mRDhcAiDVdKsOnzJqZRFGoZo74SaYTXDPwzPnhUTw6dCSnaT2inUdRHD7GNgIxM/QUvrW6WfZ4ZFm3VRSiA4sFEEaOlBX7oij2EP4ssqlj413wHqq13uy/X9lvYAcbb5P3cGmd7b9/nvneZzWdNB0EAApN2RZvoNjCvfKb4IBQ+LTe7H5+RXabmjwFCISw6Xb3i8D2oxEgwMdkBgHF7xeEC/SF34yIAN90/LHdHb94QCB2REBsauj17cqB660eogAB8bOE4vgUsBiBt2J6ux6P19v0OQECb8V8y4G34D+AKwgoQEBQgMBLYSrL222pjHEFBN4KOl0up/wWUIAA/k5tNBg014gCBPB3+s5g0EwYYB2Bl8KyND9CAQJvgnmq6kYeXxHzDyATueNnvZcYAAAAAElFTkSuQmCC',
         iconAnchor: [15,40],
         iconSize: [30,40]
       })
@@ -1131,7 +1148,739 @@
 /***************************************************************************************************************************************************************/
 
   window.plugin.bookmarks.setupCSS = function() {
-    $('<style>').prop('type', 'text/css').html('@@INCLUDESTRING:plugins/bookmarks.css@@').appendTo('head');
+    $('<style>').prop('type', 'text/css').html('/* hide when printing */\
+@media print {\
+	#bkmrksTrigger { display: none !important; }\
+}\
+\
+\
+#bookmarksBox *{\
+	display:block;\
+	padding:0;\
+	margin:0;\
+	width:auto;\
+	height:auto;\
+	font-family:Verdana,Geneva,sans-serif;\
+	font-size:13px;\
+	line-height:22px;\
+	text-indent:0;\
+	text-decoration:none;\
+	-webkit-box-sizing:border-box;\
+	-moz-box-sizing:border-box;\
+	box-sizing:border-box;\
+}\
+\
+#bookmarksBox{\
+	display:block;\
+	position:absolute !important;\
+	z-index:4001;\
+	top:100px;\
+	left:100px;\
+	width:231px;\
+	height:auto;\
+	overflow:hidden;\
+}\
+#bookmarksBox .addForm,\
+#bookmarksBox #bookmarksTypeBar,\
+#bookmarksBox h5{\
+	height:28px;\
+	overflow:hidden;\
+	color:#fff;\
+	font-size:14px;\
+}\
+#bookmarksBox #topBar{\
+	height:15px !important;\
+}\
+#bookmarksBox #topBar *{\
+	height: 14px !important;\
+}\
+#bookmarksBox #topBar *{\
+	float:left !important;\
+}\
+#bookmarksBox .handle{\
+	width:80%;\
+	text-align:center;\
+	color:#fff;\
+	line-height:6px;\
+	cursor:move;\
+}\
+#bookmarksBox #topBar .btn{\
+	display:block;\
+	width:10%;\
+	cursor:pointer;\
+	color:#20a8b1;\
+\
+	font-weight:bold;\
+	text-align:center;\
+	line-height:13px;\
+	font-size:18px;\
+}\
+\
+#bookmarksBox #topBar #bookmarksDel{\
+	overflow:hidden;\
+	text-indent:-999px;\
+	background:#B42E2E;\
+}\
+\
+#bookmarksBox #topBar #bookmarksMin:hover{\
+	color:#ffce00;\
+}\
+#bookmarksBox #bookmarksTypeBar{\
+	clear:both;\
+}\
+#bookmarksBox h5{\
+	padding:4px 0 23px;\
+	width:50%;\
+	height:93px !important;\
+	text-align:center;\
+	color:#788;\
+}\
+#bookmarksBox h5.current{\
+	cursor:default;\
+	background:0;\
+	color:#fff !important;\
+}\
+#bookmarksBox h5:hover{\
+	color:#ffce00;\
+	background:rgba(0,0,0,0);\
+}\
+#bookmarksBox #topBar,\
+#bookmarksBox .addForm,\
+#bookmarksBox #bookmarksTypeBar,\
+#bookmarksBox .bookmarkList li.bookmarksEmpty,\
+#bookmarksBox .bookmarkList li.bkmrk a,\
+#bookmarksBox .bookmarkList li.bkmrk:hover{\
+	background-color:rgba(8,48,78,.85);\
+}\
+#bookmarksBox h5,\
+#bookmarksBox .bookmarkList li.bkmrk:hover .bookmarksLink,\
+#bookmarksBox .addForm *{\
+	background:rgba(0,0,0,.3);\
+}\
+#bookmarksBox .addForm *{\
+	display:block;\
+	float:left;\
+	height:28px !important;\
+}\
+#bookmarksBox .addForm a{\
+	cursor:pointer;\
+	color:#20a8b1;\
+	font-size:12px;\
+	width:35%;\
+	text-align:center;\
+	line-height:20px;\
+	padding:4px 0 23px;\
+}\
+#bookmarksBox .addForm a:hover{\
+	background:#ffce00;\
+	color:#000;\
+	text-decoration:none;\
+}\
+#bookmarksBox .addForm input{\
+	font-size:11px !important;\
+	color:#ffce00;\
+	height:28px;\
+	padding:4px 8px 1px;\
+	line-height:12px;\
+	font-size:12px;\
+}\
+#bookmarksBox #bkmrk_portals .addForm input{\
+	width:65%;\
+}\
+#bookmarksBox #bkmrk_maps .addForm input{\
+	width:42%;\
+}\
+#bookmarksBox #bkmrk_maps .addForm a{\
+	width:29%;\
+}\
+#bookmarksBox .addForm input:hover,\
+#bookmarksBox .addForm input:focus{\
+	outline:0;\
+	background:rgba(0,0,0,.6);\
+}\
+#bookmarksBox .bookmarkList > ul{\
+	clear:both;\
+	list-style-type:none;\
+	color:#fff;\
+	overflow:hidden;\
+	overflow-y:auto;\
+	max-height:580px;\
+}\
+#bookmarksBox .sortable-placeholder{\
+	background:rgba(8,48,78,.55);\
+	box-shadow:inset 1px 0 0 #20a8b1;\
+}\
+#bookmarksBox .ui-sortable-helper{\
+	border-top-width:1px;\
+}\
+#bookmarksBox .bookmarkList{\
+	display:none;\
+}\
+#bookmarksBox .bookmarkList.current{\
+	display:block;\
+}\
+#bookmarksBox h5,\
+#bookmarksBox .addForm *,\
+#bookmarksBox ul li.bkmrk,\
+#bookmarksBox ul li.bkmrk a{\
+	height:22px;\
+}\
+#bookmarksBox h5,\
+#bookmarksBox ul li.bkmrk a{\
+	overflow:hidden;\
+	cursor:pointer;\
+	float:left;\
+}\
+#bookmarksBox ul .bookmarksEmpty{\
+	text-indent:27px;\
+	color:#eee;\
+}\
+#bookmarksBox ul .bookmarksRemoveFrom{\
+	width:10%;\
+	text-align:center;\
+	color:#fff;\
+}\
+#bookmarksBox ul .bookmarksLink{\
+	width:90%;\
+	padding:0 10px 0 8px;\
+	color:#ffce00;\
+}\
+#bookmarksBox ul .bookmarksLink.selected{\
+	color:#03fe03;\
+}\
+#bookmarksBox ul .othersBookmarks .bookmarksLink{\
+	width:90%;\
+}\
+#bookmarksBox ul .bookmarksLink:hover{\
+	color:#03fe03;\
+}\
+#bookmarksBox ul .bookmarksRemoveFrom:hover{\
+	color:#fff;\
+	background:#e22 !important;\
+}\
+\
+/*---- UI border -----*/\
+#bookmarksBox,\
+#bookmarksBox *{\
+	border-color:#20a8b1;\
+	border-style:solid;\
+	border-width:0;\
+}\
+#bookmarksBox #topBar,\
+#bookmarksBox ul .bookmarkFolder{\
+	border-top-width:1px;\
+}\
+\
+#bookmarksBox #topBar,\
+#bookmarksBox #bookmarksTypeBar,\
+#bookmarksBox .addForm,\
+#bookmarksBox ul .bookmarkFolder .folderLabel,\
+#bookmarksBox ul li.bkmrk a {\
+	border-bottom-width:1px;\
+}\
+#bookmarksBox ul .bookmarkFolder{\
+	border-right-width:1px;\
+	border-left-width:1px;\
+}\
+#bookmarksBox #topBar *,\
+#bookmarksBox #bookmarksTypeBar *,\
+#bookmarksBox .addForm *,\
+#bookmarksBox ul li.bkmrk{\
+	border-left-width:1px;\
+}\
+#bookmarksBox #topBar,\
+#bookmarksBox #bookmarksTypeBar,\
+#bookmarksBox .addForm,\
+#bookmarksBox ul .bookmarksRemoveFrom{\
+	border-right-width:1px;\
+}\
+#bookmarksBox ul .bookmarkFolder.othersBookmarks li.bkmrk,\
+#bookmarksBox ul .bookmarkFolder .folderLabel .bookmarksRemoveFrom{\
+	border-left-width:0;\
+}\
+#bkmrksTrigger{\
+	display:block;\
+	position:absolute;\
+	overflow:hidden;\
+	top:0;\
+	left:277px;\
+	width:47px;\
+	margin-top:-36px;\
+	height:64px;\
+	height:0;\
+	cursor:pointer;\
+	z-index:2999;\
+	background-position:center bottom;\
+	background-repeat:no-repeat;\
+	transition:margin-top 100ms ease-in-out;\
+	text-indent:-100%;\
+	text-decoration:none;\
+	text-align:center;\
+}\
+#bkmrksTrigger:hover{\
+	margin-top:0;\
+}\
+.portal-list-bookmark span {\
+	display:inline-block;\
+	margin: -3px;\
+	width:16px;\
+	height:15px;\
+	overflow:hidden;\
+	background-repeat:no-repeat;\
+	cursor:pointer;\
+}\
+#bkmrksTrigger, .bkmrksStar span, .portal-list-bookmark span {\
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAABPCAMAAABMDWzEAAAANlBMVEX/////zgD/zgD///////8Aru7/zgAAru4TtPAAAADA7PtAwvLk9/6b3/n///8Aru510/b/zgDZKp6YAAAACnRSTlOAxo5FtDw9mPoA9GJiegAAAklJREFUeF6dle26ozAIhFO1NkK+vP+b3WbBJRwM7dn5lad9BweoaThI63Z42hfmLn4rLv84d8WvpWxe+fNcFL+VUtzy57kLv67lrbDOqu/nW8tfQ1i3MmjbfrKPc9BjCYfiy2qjjNoDZRfcaBnxnl8Mm8KN4bFzv6q6lVT/P369+DBZFmsZ+LAmWbHllz7XB/OBwDDhF1rVIvwFhHt+vw4dqbViKdC0wHySSsE3e/FxpHPpAo+vUehUSCk7PBuYTpCUw/JsAIoipzlfUTHimPGNMujQ7LA86sSqm2x4BFXbOjTPSWJFxtgpbRTFd+VITdPGQG3b8hArCbm7n9vVefqZxT8I0G2Y+Yi4XFNy+Jqpn695WlP6ksdWSJB9PmJrkMqolADyjIdyrzSrD1Pc8lND8vrNFvfnkw3u8NYAn+ev+M/7iorPH3n8Jd9+mT+b8fg8EBZb+o4n+n0gx4yPMp5MZ3LkW77XJAaZZkdmPtv7JGG9EfLLrnkS3DjiRWseej6OrnXd0ub/hQbftIPHCnfzjDz6sXjy3seKoBqXG97yqiCgmFv198uNYy7XptHlr8aHcbk8NW5veMtrg+A1Ojy3oCeLDs9zgfEHEi2vu03INu4Y/fk3OVOo6N2f8u5IqDs+NvMaYOJQaHj5rut1vGIda/zk5dmdfh7H8XypUJpP0luNne56xnEdildRRPyIfMMDSnGWhEJQvEQZittQwoONYkP946OOMnsERuZNFKMXOYiXkXsO4U0UL1QwffqPCH4Us4xgovih/gBs1LqNE0afwAAAAABJRU5ErkJggg==);\
+}\
+.bkmrksStar span{\
+	display:inline-block;\
+	float:left;\
+	margin:3px 1px 0 4px;\
+	width:16px;\
+	height:15px;\
+	overflow:hidden;\
+	background-repeat:no-repeat;\
+}\
+.bkmrksStar span, .bkmrksStar.favorite:focus span{\
+	background-position:left top;\
+}\
+.bkmrksStar:focus span, .bkmrksStar.favorite span, .portal-list-bookmark.favorite span{\
+	background-position:right top;\
+}\
+#bookmarksBox .bookmarkList .bookmarkFolder{\
+	overflow:hidden;\
+	margin-top:-1px;\
+	height:auto;\
+	background:rgba(8,58,78,.7);\
+}\
+#bookmarksBox .bookmarkList ul li.sortable-placeholder{\
+	box-shadow:inset -1px 0 0 #20a8b1,inset 1px 0 0 #20a8b1,0 -1px 0 #20a8b1;\
+	background:rgba(8,58,78,.9);\
+}\
+#bookmarksBox .bookmarkList .bkmrk.ui-sortable-helper{\
+	border-right-width:1px;\
+	border-left-width:1px !important;\
+}\
+#bookmarksBox .bookmarkList ul li ul li.sortable-placeholder{\
+	height:23px;\
+	box-shadow:inset 0 -1px 0 #20a8b1,inset 1px 0 0 #20a8b1;\
+}\
+\
+#bookmarksBox .bookmarkList ul li.bookmarkFolder.ui-sortable-helper,\
+#bookmarksBox .bookmarkList ul li.othersBookmarks ul li.sortable-placeholder{\
+	box-shadow:inset 0 -1px 0 #20a8b1;\
+}\
+\
+#bookmarksBox #topBar #bookmarksDel,\
+#bookmarksBox .bookmarkList .bookmarkFolder .folderLabel:hover .bookmarksRemoveFrom,\
+#bookmarksBox .bookmarkList .bookmarkFolder .folderLabel:hover .bookmarksAnchor{\
+	border-bottom-width:1px;\
+}\
+\
+/*---------*/\
+#bookmarksBox .bookmarkList .bookmarkFolder .folderLabel .bookmarksAnchor span,\
+#bookmarksBox .bookmarkList .bookmarkFolder .folderLabel > span,\
+#bookmarksBox .bookmarkList .bookmarkFolder .folderLabel > span > span,\
+#bookmarksBox .bookmarkList .triangle{\
+	width:0;\
+	height:0;\
+}\
+#bookmarksBox .bookmarkList .bookmarkFolder .folderLabel{\
+	overflow:visible;\
+	height:25px;\
+	cursor:pointer;\
+	background:#069;\
+	text-indent:0;\
+}\
+#bookmarksBox .bookmarkList .bookmarkFolder .folderLabel > *{\
+	height:25px;\
+	float:left;\
+}\
+#bookmarksBox .bookmarkList .bookmarkFolder .folderLabel .bookmarksAnchor{\
+	line-height:25px;\
+	color:#fff;\
+	width:90%;\
+}\
+#bookmarksBox .bookmarkList .bookmarkFolder .folderLabel .bookmarksAnchor span{\
+	float:left;\
+	border-width:5px 0 5px 7px;\
+	border-color:transparent transparent transparent white;\
+	margin:7px 7px 0 6px;\
+}\
+#bookmarksBox .bookmarkList .bookmarkFolder.open .folderLabel .bookmarksAnchor span{\
+	margin:9px 5px 0 5px;\
+	border-width:7px 5px 0 5px;\
+	border-color:white transparent transparent transparent;\
+}\
+#bookmarksBox .bookmarkList .bookmarkFolder .folderLabel > span,\
+#bookmarksBox .bookmarkList .bookmarkFolder .folderLabel > span > span{\
+	display:none;\
+	border-width:0 12px 10px 0;\
+	border-color:transparent #20a8b1 transparent transparent;\
+	margin:-20px 0 0;\
+	position:relative;\
+	top:21px;\
+	left:219px;\
+}\
+#bookmarksBox .bookmarkList .bookmarkFolder .folderLabel > span > span{\
+	top:18px;\
+	left:0;\
+	border-width:0 10px 9px 0;\
+	border-color:transparent #069 transparent transparent;\
+}\
+#bookmarksBox .bookmarkList .bookmarkFolder.open .folderLabel > span,\
+#bookmarksBox .bookmarkList .bookmarkFolder.open .folderLabel > span > span{\
+	display:block;\
+	display:none;\
+}\
+#bookmarksBox .bookmarkList .bookmarkFolder.open .folderLabel:hover > span > span{\
+	border-color:transparent #036 transparent transparent;\
+}\
+#bookmarksBox .bookmarkList .bookmarkFolder .folderLabel:hover .bookmarksAnchor{\
+	background:#036;\
+}\
+#bookmarksBox .bookmarkList .bookmarkFolder ul{\
+	display:none;\
+	margin-left:10%;\
+}\
+#bookmarksBox .bookmarkList .bookmarkFolder.open ul{\
+	display:block;\
+	min-height:22px;\
+}\
+#bookmarksBox .bookmarkFolder.othersBookmarks ul{\
+	margin-left:0;\
+}\
+\
+/*---- Width for deleteMode -----*/\
+#bookmarksBox .bookmarksRemoveFrom{\
+	display:none !important;\
+}\
+#bookmarksBox.deleteMode .bookmarksRemoveFrom{\
+	display:block !important;\
+}\
+\
+#bookmarksBox .bookmarkList .bookmarkFolder .folderLabel .bookmarksAnchor,\
+#bookmarksBox ul .bookmarksLink,\
+#bookmarksBox ul .othersBookmarks .bookmarksLink{\
+	width:100% !important;\
+}\
+\
+#bookmarksBox.deleteMode .bookmarkList .bookmarkFolder .folderLabel .bookmarksAnchor,\
+#bookmarksBox.deleteMode ul .bookmarksLink,\
+#bookmarksBox.deleteMode ul .othersBookmarks .bookmarksLink{\
+	width:90% !important;\
+}\
+\
+/**********************************************\
+	MOBILE\
+**********************************************/\
+#bookmarksBox.mobile{\
+	position:absolute !important;\
+	width: 100% !important;\
+	height: 100% !important;\
+	top: 0 !important;\
+	left: 0 !important;\
+	margin: 0 !important;\
+	padding: 0 !important;\
+	border: 0 !important;\
+	background: transparent !important;\
+	overflow:auto !important;\
+}\
+#bookmarksBox.mobile .bookmarkList ul,\
+#bookmarksBox.mobile .bookmarkList ul li,\
+#bookmarksBox.mobile .bookmarkList.current,\
+#bookmarksBox.mobile .bookmarkList li.bookmarkFolder.open ul{\
+	width:100% !important;\
+	display:block !important;\
+}\
+#bookmarksBox.mobile *{\
+	box-shadow:none !important;\
+	border-width:0 !important;\
+}\
+#bookmarksBox.mobile #topBar #bookmarksMin,\
+#bookmarksBox.mobile #topBar .handle{\
+	display:none !important;\
+}\
+\
+#bookmarksBox.mobile #bookmarksTypeBar h5{\
+	cursor:pointer;\
+	text-align:center;\
+	float:left;\
+	width:50%;\
+	height:auto !important;\
+	padding:7px 0;\
+}\
+#bookmarksBox.mobile #bookmarksTypeBar h5.current{\
+	cursor:default;\
+	color:#fff;\
+}\
+#bookmarksBox.mobile #bookmarksTypeBar,\
+#bookmarksBox.mobile .bookmarkList .addForm{\
+	border-bottom:1px solid #20a8b1 !important;\
+}\
+#bookmarksBox.mobile .bookmarkList ul li ul li.bkmrk,\
+#bookmarksBox.mobile .bookmarkList li.bookmarkFolder .folderLabel{\
+	height:36px !important;\
+	clear:both;\
+}\
+#bookmarksBox.mobile .bookmarkList li.bookmarkFolder .folderLabel a,\
+#bookmarksBox.mobile .bookmarkList ul li ul li.bkmrk a{\
+	background:none;\
+	padding:7px 0;\
+	height:auto;\
+	box-shadow:inset 0 1px 0 #20a8b1 !important;\
+}\
+#bookmarksBox.mobile .bookmarkList li.bookmarkFolder a.bookmarksRemoveFrom,\
+#bookmarksBox.mobile .bookmarkList li.bkmrk a.bookmarksRemoveFrom{\
+	box-shadow:inset 0 1px 0 #20a8b1,inset -1px 0 0 #20a8b1 !important;\
+	width:10%;\
+	background:none !important;\
+}\
+#bookmarksBox.mobile .bookmarkList li.bookmarkFolder a.bookmarksAnchor,\
+#bookmarksBox.mobile .bookmarkList li.bkmrk a.bookmarksLink{\
+	text-indent:10px;\
+	height:36px;\
+	line-height:24px;\
+	overflow:hidden;\
+}\
+#bookmarksBox.mobile .bookmarkList ul li.bookmarkFolder ul{\
+	margin-left:0 !important;\
+}\
+#bookmarksBox.mobile .bookmarkList > ul{\
+	border-bottom:1px solid #20a8b1 !important;\
+}\
+\
+#bookmarksBox.mobile .bookmarkList .bookmarkFolder.othersBookmarks  ul{\
+	border-top:5px solid #20a8b1 !important;\
+}\
+#bookmarksBox.mobile .bookmarkList li.bookmarkFolder,\
+#bookmarksBox.mobile .bookmarkList li.bkmrk{\
+	box-shadow:inset 0 1px 0 #20a8b1, 1px 0 0 #20a8b1, -1px 1px 0 #20a8b1 !important;\
+}\
+#bookmarksBox.mobile .bookmarkList > ul{\
+	max-height:none;\
+/*	width:85% !important;*/\
+}\
+#bookmarksBox.mobile .bookmarkList li.bookmarkFolder .folderLabel{\
+	box-shadow:0 1px 0 #20a8b1 !important;\
+}\
+#bookmarksBox.mobile .bookmarkList ul li.bookmarkFolder ul{\
+	width:90% !important;\
+	margin-left:10% !important;\
+}\
+#bookmarksBox.mobile .bookmarkList ul li.bookmarkFolder.othersBookmarks ul{\
+	width:100% !important;\
+	margin-left:0% !important;\
+}\
+#bookmarksBox.mobile{\
+	margin-bottom:5px !important;\
+}\
+#bookmarksBox.mobile #bookmarksTypeBar{\
+	height:auto;\
+}\
+#bookmarksBox.mobile .addForm,\
+#bookmarksBox.mobile .addForm *{\
+	height:35px !important;\
+	padding:0;\
+}\
+#bookmarksBox.mobile .addForm a{\
+	line-height:37px;\
+}\
+\
+#bookmarksBox.mobile .addForm a{\
+/*	width:25% !important;*/\
+}\
+#bookmarksBox.mobile .addForm input{\
+/*	width:50% !important;*/\
+	text-indent:10px;\
+}\
+#bookmarksBox.mobile #bkmrk_portals .addForm input{\
+/*	width:75% !important;*/\
+}\
+#bookmarksBox.mobile #bookmarksTypeBar h5,\
+#bookmarksBox.mobile .bookmarkList .addForm a{\
+	box-shadow:-1px 0 0 #20a8b1 !important;\
+}\
+#bookmarksBox.mobile .bookmarkList li.bookmarkFolder ul{\
+	display:none !important;\
+	min-height:37px !important;\
+}\
+#updatestatus .bkmrksStar{\
+	float:left;\
+	margin:-19px 0 0 -5px;\
+	padding:0 3px 1px 4px;\
+	background:#262c32;\
+}\
+#bookmarksBox.mobile .bookmarkList .bookmarkFolder .folderLabel .bookmarksAnchor span,\
+#bookmarksBox.mobile .bookmarkList .bookmarkFolder .folderLabel > span,\
+#bookmarksBox.mobile .bookmarkList .bookmarkFolder .folderLabel > span > span,\
+#bookmarksBox.mobile .bookmarkList .triangle{\
+	width:0 !important;\
+	height:0 !important;\
+}\
+#bookmarksBox.mobile .bookmarkList .bookmarkFolder .folderLabel .bookmarksAnchor span{\
+	float:left !important;\
+	border-width:5px 0 5px 7px !important;\
+	border-color:transparent transparent transparent white !important;\
+	margin:7px 3px 0 13px !important;\
+}\
+#bookmarksBox.mobile .bookmarkList .bookmarkFolder.open .folderLabel .bookmarksAnchor span{\
+	margin:9px 1px 0 12px !important;\
+	border-width:7px 5px 0 5px !important;\
+	border-color:white transparent transparent transparent !important;\
+}\
+#bookmarksBox.mobile .bookmarkList .bookmarkFolder .folderLabel > span,\
+#bookmarksBox.mobile .bookmarkList .bookmarkFolder .folderLabel > span > span{\
+	display:none !important;\
+	border-width:0 12px 10px 0 !important;\
+	border-color:transparent #20a8b1 transparent transparent !important;\
+	margin:-20px 0 0 100% !important;\
+	position:relative !important;\
+	top:21px !important;\
+	left:-10px !important;\
+}\
+#bookmarksBox.mobile .bookmarkList .bookmarkFolder .folderLabel > span > span{\
+	top:18px !important;\
+	left:0 !important;\
+	border-width:0 10px 9px 0 !important;\
+	border-color:transparent #069 transparent transparent !important;\
+}\
+#bookmarksBox.mobile .bookmarkList .bookmarkFolder.open .folderLabel > span,\
+#bookmarksBox.mobile .bookmarkList .bookmarkFolder.open .folderLabel > span > span{\
+	display:block !important;\
+}\
+\
+/**********************************************\
+	DIALOG BOX\
+**********************************************/\
+/*---- Auto Drawer -----*/\
+#bkmrksAutoDrawer,\
+#bkmrksAutoDrawer p,\
+#bkmrksAutoDrawer a{\
+	display:block;\
+	padding:0;\
+	margin:0;\
+}\
+#bkmrksAutoDrawer .bookmarkFolder{\
+	margin-bottom:4px;\
+	border:1px solid #20a8b1;\
+}\
+#bkmrksAutoDrawer .folderLabel{\
+	background:#069;\
+	padding:4px 0;\
+	color:#fff;\
+}\
+#bkmrksAutoDrawer .bookmarkFolder div{\
+	border-top:1px solid #20a8b1;\
+	padding:6px 0;\
+	background:rgba(0,0,0,0.3);\
+}\
+#bkmrksAutoDrawer .bookmarkFolder#idOthers .folderLabel{\
+	display:none;\
+}\
+#bkmrksAutoDrawer .bookmarkFolder#idOthers div{\
+	display:block;\
+	border-top:none;\
+}\
+#bkmrksAutoDrawer a{\
+	text-indent:10px;\
+	padding:2px 0;\
+}\
+#bkmrksAutoDrawer .longdistance {\
+	color: #FFCC00;\
+	font-weight: bold;\
+	border-bottom: 1px dashed currentColor;\
+}\
+#bkmrksAutoDrawer .bookmarkFolder div {\
+	display:none;\
+}\
+#bkmrksAutoDrawer a.bkmrk.selected{\
+	color:#03dc03;\
+}\
+\
+/*---- Options panel -----*/\
+#bkmrksSetbox a{\
+	display:block;\
+	color:#ffce00;\
+	border:1px solid #ffce00;\
+	padding:3px 0;\
+	margin:10px auto;\
+	width:80%;\
+	text-align:center;\
+	background:rgba(8,48,78,.9);\
+}\
+#bkmrksSetbox a.disabled,\
+#bkmrksSetbox a.disabled:hover{\
+	color:#666;\
+	border-color:#666;\
+	text-decoration:none;\
+}\
+/*---- Opt panel - copy -----*/\
+.ui-dialog-bkmrksSet-copy textarea{\
+	width:96%;\
+	height:120px;\
+	resize:vertical;\
+}\
+\
+\
+/*--- Other Opt css ---*/\
+#bookmarksBox.mobile a.bookmarksMoveIn{\
+	display:none !important;\
+}\
+\
+#bookmarksBox.mobile .bookmarkList ul li ul li.bkmrk a.bookmarksMoveIn{\
+	background:none !important;\
+	text-align:center;\
+	color:#fff;\
+	box-shadow: inset 0 1px 0 #20A8B1,inset -1px 0 0 #20A8B1 !important;\
+	width:10%;\
+}\
+\
+#bookmarksBox.mobile.moveMode a.bookmarksMoveIn{\
+	display:block !important;\
+}\
+\
+#bookmarksBox.moveMode ul .bookmarksLink,\
+#bookmarksBox.moveMode ul .othersBookmarks .bookmarksLink{\
+	width:90% !important;\
+}\
+.bookmarksDialog h3{\
+	text-transform:capitalize;margin-top:10px;\
+}\
+.bookmarksDialog .bookmarkFolder{\
+	margin-bottom:4px;\
+	border:1px solid #20a8b1;\
+	background:#069;\
+	padding:4px 10px;\
+	color:#fff;\
+	cursor:pointer;\
+}\
+.bookmarksDialog .bookmarkFolder:hover{\
+	text-decoration:underline;\
+}\
+\
+#bookmarksBox.mobile #topBar .btn{\
+	width:100%;height:45px !important;\
+	font-size:13px;\
+	color:#fff;\
+	font-weight:normal;\
+	padding-top:17px;\
+	text-indent:0 !important;\
+}\
+#bookmarksBox.mobile .btn{\
+	width:50% !important;\
+	background:#222;\
+}\
+#bookmarksBox.mobile .btn.left{\
+	border-right:1px solid #20a8b1 !important;\
+}\
+#bookmarksBox.mobile .btn#bookmarksMove{\
+	background:#B42E2E;\
+}\
+#bkmrksSetbox{\
+	text-align:center;\
+}\
+').appendTo('head');
   }
 
   window.plugin.bookmarks.setupPortalsList = function() {
@@ -1320,4 +2069,18 @@
 
 // PLUGIN END //////////////////////////////////////////////////////////
 
-@@PLUGINEND@@
+
+setup.info = plugin_info; //add the script info data to the function as a property
+if(!window.bootPlugins) window.bootPlugins = [];
+window.bootPlugins.push(setup);
+// if IITC has already booted, immediately run the 'setup' function
+if(window.iitcLoaded && typeof setup === 'function') setup();
+} // wrapper end
+// inject code into site context
+var script = document.createElement('script');
+var info = {};
+if (typeof GM_info !== 'undefined' && GM_info && GM_info.script) info.script = { version: GM_info.script.version, name: GM_info.script.name, description: GM_info.script.description };
+script.appendChild(document.createTextNode('('+ wrapper +')('+JSON.stringify(info)+');'));
+(document.body || document.head || document.documentElement).appendChild(script);
+
+

@@ -1,13 +1,30 @@
 // ==UserScript==
 // @id             layer-count@fkloft
-// @name           IITC plugin: Layer count
-// @category       Info
-// @version        0.1.0.@@DATETIMEVERSION@@
-// @description    [@@BUILDNAME@@-@@BUILDDATE@@] Allow users to count nested fields
-@@METAINFO@@
+// @name           IITC plugin: 层数
+// @category       信息
+// @version        0.1.0.20190616.73555
+// @description    [mobile-2019-06-16-073555] 允许用户计算多重Fields层数
+// @updateURL      none
+// @downloadURL    none
+// @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
+// @include        https://intel.ingress.com/*
+// @match          https://intel.ingress.com/*
+// @grant          none
 // ==/UserScript==
 
-@@PLUGINSTART@@
+
+function wrapper(plugin_info) {
+// ensure plugin framework is there, even if iitc is not yet loaded
+if(typeof window.plugin !== 'function') window.plugin = function() {};
+
+//PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
+//(leaving them in place might break the 'About IITC' page or break update checks)
+plugin_info.buildName = 'mobile';
+plugin_info.dateTimeVersion = '20190616.73555';
+plugin_info.pluginId = 'layer-count';
+//END PLUGIN AUTHORS NOTE
+
+
 
 // PLUGIN START ////////////////////////////////////////////////////////
 
@@ -135,7 +152,46 @@ plugin.layerCount.calculate = function(ev) {
 };
 
 var setup = function() {
-	$('<style>').prop('type', 'text/css').html('@@INCLUDESTRING:plugins/layer-count.css@@').appendTo('head');
+	$('<style>').prop('type', 'text/css').html('.leaflet-control-layer-count a\
+{\
+	background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCI+Cgk8ZyBzdHlsZT0iZmlsbDojMDAwMDAwO2ZpbGwtb3BhY2l0eTowLjQ7c3Ryb2tlOm5vbmUiPgoJCTxwYXRoIGQ9Ik0gNiwyNCAyNCwyNCAxNSw2IHoiLz4KCQk8cGF0aCBkPSJNIDYsMjQgMjQsMjQgMTUsMTIgeiIvPgoJCTxwYXRoIGQ9Ik0gNiwyNCAyNCwyNCAxNSwxOCB6Ii8+Cgk8L2c+Cjwvc3ZnPgo=");\
+}\
+.leaflet-control-layer-count a.active\
+{\
+	background-color: #BBB;\
+}\
+.leaflet-control-layer-count-tooltip\
+{\
+	background-color: rgba(255, 255, 255, 0.6);\
+	display: none;\
+	height: 24px;\
+	left: 30px;\
+	line-height: 24px;\
+	margin-left: 15px;\
+	margin-top: -12px;\
+	padding: 0 10px;\
+	position: absolute;\
+	top: 50%;\
+	white-space: nowrap;\
+	width: auto;\
+}\
+.leaflet-control-layer-count a.active .leaflet-control-layer-count-tooltip\
+{\
+	display: block;\
+}\
+.leaflet-control-layer-count-tooltip:before\
+{\
+	border-color: transparent rgba(255, 255, 255, 0.6);\
+	border-style: solid;\
+	border-width: 12px 12px 12px 0;\
+	content: "";\
+	display: block;\
+	height: 0;\
+	left: -12px;\
+	position: absolute;\
+	width: 0;\
+}\
+').appendTo('head');
 
 	var parent = $(".leaflet-top.leaflet-left", window.map.getContainer());
 
@@ -160,5 +216,19 @@ var setup = function() {
 
 // PLUGIN END //////////////////////////////////////////////////////////
 
-@@PLUGINEND@@
+
+setup.info = plugin_info; //add the script info data to the function as a property
+if(!window.bootPlugins) window.bootPlugins = [];
+window.bootPlugins.push(setup);
+// if IITC has already booted, immediately run the 'setup' function
+if(window.iitcLoaded && typeof setup === 'function') setup();
+} // wrapper end
+// inject code into site context
+var script = document.createElement('script');
+var info = {};
+if (typeof GM_info !== 'undefined' && GM_info && GM_info.script) info.script = { version: GM_info.script.version, name: GM_info.script.name, description: GM_info.script.description };
+script.appendChild(document.createTextNode('('+ wrapper +')('+JSON.stringify(info)+');'));
+(document.body || document.head || document.documentElement).appendChild(script);
+
+
 

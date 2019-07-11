@@ -1,13 +1,30 @@
 // ==UserScript==
 // @id             iitc-plugin-portals-list@teo96
-// @name           IITC plugin: Portals list
-// @category       Info
-// @version        0.2.1.@@DATETIMEVERSION@@
-// @description    [@@BUILDNAME@@-@@BUILDDATE@@] Display a sortable list of all visible portals with full details about the team, resonators, links, etc.
-@@METAINFO@@
+// @name           IITC plugin: Portals列表
+// @category       信息
+// @version        0.2.1.20190616.73555
+// @description    [mobile-2019-06-16-073555] 显示所有可见portal的可排序列表，其中包含有关阵营，谐振器，链接等完整详细信息。
+// @updateURL      none
+// @downloadURL    none
+// @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
+// @include        https://intel.ingress.com/*
+// @match          https://intel.ingress.com/*
+// @grant          none
 // ==/UserScript==
 
-@@PLUGINSTART@@
+
+function wrapper(plugin_info) {
+// ensure plugin framework is there, even if iitc is not yet loaded
+if(typeof window.plugin !== 'function') window.plugin = function() {};
+
+//PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
+//(leaving them in place might break the 'About IITC' page or break update checks)
+plugin_info.buildName = 'mobile';
+plugin_info.dateTimeVersion = '20190616.73555';
+plugin_info.pluginId = 'portals-list';
+//END PLUGIN AUTHORS NOTE
+
+
 
 // PLUGIN START ////////////////////////////////////////////////////////
 
@@ -392,11 +409,130 @@ var setup =  function() {
 
   $("<style>")
     .prop("type", "text/css")
-    .html("@@INCLUDESTRING:plugins/portals-list.css@@")
+    .html("#portalslist.mobile {\
+  background: transparent;\
+  border: 0 none !important;\
+  height: 100% !important;\
+  width: 100% !important;\
+  left: 0 !important;\
+  top: 0 !important;\
+  position: absolute;\
+  overflow: auto;\
+}\
+\
+#portalslist table {\
+  margin-top: 5px;\
+  border-collapse: collapse;\
+  empty-cells: show;\
+  width: 100%;\
+  clear: both;\
+}\
+\
+#portalslist table td, #portalslist table th {\
+  background-color: #1b415e;\
+  border-bottom: 1px solid #0b314e;\
+  color: white;\
+  padding: 3px;\
+}\
+\
+#portalslist table th {\
+  text-align: center;\
+}\
+\
+#portalslist table .alignR {\
+  text-align: right;\
+}\
+\
+#portalslist table.portals td {\
+  white-space: nowrap;\
+}\
+\
+#portalslist table th.sortable {\
+  cursor: pointer;\
+}\
+\
+#portalslist table .portalTitle {\
+  min-width: 120px !important;\
+  max-width: 240px !important;\
+  overflow: hidden;\
+  white-space: nowrap;\
+  text-overflow: ellipsis;\
+}\
+\
+#portalslist .sorted {\
+  color: #FFCE00;\
+}\
+\
+#portalslist table.filter {\
+  table-layout: fixed;\
+  cursor: pointer;\
+  border-collapse: separate;\
+  border-spacing: 1px;\
+}\
+\
+#portalslist table.filter th {\
+  text-align: left;\
+  padding-left: 0.3em;\
+  overflow: hidden;\
+  text-overflow: ellipsis;\
+}\
+\
+#portalslist table.filter td {\
+  text-align: right;\
+  padding-right: 0.3em;\
+  overflow: hidden;\
+  text-overflow: ellipsis;\
+}\
+\
+#portalslist .filterNeu {\
+  background-color: #666;\
+}\
+\
+#portalslist table tr.res td, #portalslist .filterRes {\
+  background-color: #005684;\
+}\
+\
+#portalslist table tr.enl td, #portalslist .filterEnl {\
+  background-color: #017f01;\
+}\
+\
+#portalslist table tr.none td {\
+  background-color: #000;\
+}\
+\
+#portalslist .disclaimer {\
+  margin-top: 10px;\
+  font-size: 10px;\
+}\
+\
+#portalslist.mobile table.filter tr {\
+  display: block;\
+  text-align: center;\
+}\
+#portalslist.mobile table.filter th, #portalslist.mobile table.filter td {\
+  display: inline-block;\
+  width: 22%;\
+}\
+\
+")
     .appendTo("head");
 
 }
 
 // PLUGIN END //////////////////////////////////////////////////////////
 
-@@PLUGINEND@@
+
+setup.info = plugin_info; //add the script info data to the function as a property
+if(!window.bootPlugins) window.bootPlugins = [];
+window.bootPlugins.push(setup);
+// if IITC has already booted, immediately run the 'setup' function
+if(window.iitcLoaded && typeof setup === 'function') setup();
+} // wrapper end
+// inject code into site context
+var script = document.createElement('script');
+var info = {};
+if (typeof GM_info !== 'undefined' && GM_info && GM_info.script) info.script = { version: GM_info.script.version, name: GM_info.script.name, description: GM_info.script.description };
+script.appendChild(document.createTextNode('('+ wrapper +')('+JSON.stringify(info)+');'));
+(document.body || document.head || document.documentElement).appendChild(script);
+
+

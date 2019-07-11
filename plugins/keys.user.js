@@ -1,13 +1,30 @@
 // ==UserScript==
 // @id             iitc-plugin-keys@xelio
 // @name           IITC plugin: Keys
-// @category       Misc
-// @version        0.3.0.@@DATETIMEVERSION@@
-// @description    [@@BUILDNAME@@-@@BUILDDATE@@] Allow manual entry of key counts for each portal. Use the 'keys-on-map' plugin to show the numbers on the map, and 'sync' to share between multiple browsers or desktop/mobile.
-@@METAINFO@@
+// @category       杂项
+// @version        0.3.0.20190616.73555
+// @description    [mobile-2019-06-16-073555] 允许手动输入每个portal的key数量。 可以使用'地图上的Keys'插件在地图上显示数字，并使用'sync'插件以在多个浏览器或桌面/移动设备之间共享。
+// @updateURL      none
+// @downloadURL    none
+// @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
+// @include        https://intel.ingress.com/*
+// @match          https://intel.ingress.com/*
+// @grant          none
 // ==/UserScript==
 
-@@PLUGINSTART@@
+
+function wrapper(plugin_info) {
+// ensure plugin framework is there, even if iitc is not yet loaded
+if(typeof window.plugin !== 'function') window.plugin = function() {};
+
+//PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
+//(leaving them in place might break the 'About IITC' page or break update checks)
+plugin_info.buildName = 'mobile';
+plugin_info.dateTimeVersion = '20190616.73555';
+plugin_info.pluginId = 'keys';
+//END PLUGIN AUTHORS NOTE
+
+
 
 // PLUGIN START ////////////////////////////////////////////////////////
 
@@ -162,7 +179,93 @@ window.plugin.keys.loadKeys = function() {
 window.plugin.keys.setupCSS = function() {
   $("<style>")
     .prop("type", "text/css")
-    .html("@@INCLUDESTRING:plugins/keys.css@@")
+    .html("#keys-content-outer {\
+  display: table;\
+  width: 100%;\
+  height: 26px;\
+  text-align: center;\
+}\
+\
+#keys-content-outer > div{\
+  display: inline-block;\
+  vertical-align: middle;\
+  margin: 6px 3px 1px 3px;\
+}\
+\
+#keys-label {\
+  padding: 0 4px;\
+  cursor: help;\
+}\
+\
+#keys-add {\
+}\
+\
+#keys-count {\
+  width: 26px;\
+  height: 18px !important;\
+  border: 1px solid;\
+  text-align: center;\
+  cursor: help;\
+}\
+\
+#keys-subtract {\
+}\
+\
+.keys-button {\
+  position:relative;\
+  width: 16px;\
+  height: 16px !important;\
+}\
+\
+.keys-button > div {\
+  background-color: rgb(32, 168, 177);\
+  position: absolute;\
+}\
+\
+.keys-button-minus {\
+  width: 100%;\
+  height: 4px;\
+  top: 6px;\
+}\
+\
+.keys-button-plus-h {\
+  width: 100%;\
+  height: 4px;\
+  top: 6px;\
+}\
+\
+.keys-button-plus-v {\
+  width: 4px;\
+  height: 100%;\
+  left: 6px;\
+}\
+\
+#keys-help {\
+  font-weight: 900;\
+  margin: 6px 3px 1px 20px !important;\
+  cursor: help;\
+}\
+\
+.portal-list-keys button {\
+  font-family: monospace;\
+  font-size: 0.9em;\
+  text-align: center;\
+  vertical-align: middle;\
+  min-width: 0;\
+  padding: 0;\
+  width: 1.5em;\
+  margin: -6px 0 -3px;\
+}\
+#portalslist.mobile .portal-list-keys button {\
+  width: 3em;\
+  height: 1.5em;\
+}\
+.portal-list-keys .plus {\
+  margin-left: 0.3em;\
+  margin-right: -1px;\
+}\
+\
+")
     .appendTo("head");
 }
 
@@ -256,4 +359,18 @@ var setup =  function() {
 
 // PLUGIN END //////////////////////////////////////////////////////////
 
-@@PLUGINEND@@
+
+setup.info = plugin_info; //add the script info data to the function as a property
+if(!window.bootPlugins) window.bootPlugins = [];
+window.bootPlugins.push(setup);
+// if IITC has already booted, immediately run the 'setup' function
+if(window.iitcLoaded && typeof setup === 'function') setup();
+} // wrapper end
+// inject code into site context
+var script = document.createElement('script');
+var info = {};
+if (typeof GM_info !== 'undefined' && GM_info && GM_info.script) info.script = { version: GM_info.script.version, name: GM_info.script.name, description: GM_info.script.description };
+script.appendChild(document.createTextNode('('+ wrapper +')('+JSON.stringify(info)+');'));
+(document.body || document.head || document.documentElement).appendChild(script);
+
+

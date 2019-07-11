@@ -1,13 +1,30 @@
 // ==UserScript==
 // @id             iitc-plugin-uniques@3ch01c
 // @name           IITC plugin: Uniques
-// @category       Misc
-// @version        0.2.4.@@DATETIMEVERSION@@
-// @description    [@@BUILDNAME@@-@@BUILDDATE@@] Allow manual entry of portals visited/captured. Use the 'highlighter-uniques' plugin to show the uniques on the map, and 'sync' to share between multiple browsers or desktop/mobile. It will try and guess which portals you have captured from COMM/portal details, but this will not catch every case.
-@@METAINFO@@
+// @category       杂项
+// @version        0.2.4.20190616.73555
+// @description    [mobile-2019-06-16-073555] Allow manual entry of portals visited/captured. Use the 'highlighter-uniques' plugin to show the uniques on the map, and 'sync' to share between multiple browsers or desktop/mobile. It will try and guess which portals you have captured from COMM/portal details, but this will not catch every case.
+// @updateURL      none
+// @downloadURL    none
+// @namespace      https://github.com/IITC-CE/ingress-intel-total-conversion
+// @include        https://intel.ingress.com/*
+// @match          https://intel.ingress.com/*
+// @grant          none
 // ==/UserScript==
 
-@@PLUGINSTART@@
+
+function wrapper(plugin_info) {
+// ensure plugin framework is there, even if iitc is not yet loaded
+if(typeof window.plugin !== 'function') window.plugin = function() {};
+
+//PLUGIN AUTHORS: writing a plugin outside of the IITC build environment? if so, delete these lines!!
+//(leaving them in place might break the 'About IITC' page or break update checks)
+plugin_info.buildName = 'mobile';
+plugin_info.dateTimeVersion = '20190616.73555';
+plugin_info.pluginId = 'uniques';
+//END PLUGIN AUTHORS NOTE
+
+
 //PLUGIN START ////////////////////////////////////////////////////////
 
 //use own namespace for plugin
@@ -408,7 +425,26 @@ window.plugin.uniques.highlighter = {
 window.plugin.uniques.setupCSS = function() {
 	$("<style>")
 	.prop("type", "text/css")
-	.html("@@INCLUDESTRING:plugins/uniques.css@@")
+	.html("#uniques-container {\
+  display: block;\
+  text-align: center;\
+  margin: 6px 3px 1px 3px;\
+  padding: 0 4px;\
+}\
+#uniques-container label {\
+  margin: 0 0.5em;\
+}\
+#uniques-container input {\
+  vertical-align: middle;\
+}\
+\
+.portal-list-uniques input[type=\'checkbox\'] {\
+  padding: 0;\
+  height: auto;\
+  margin-top: -5px;\
+  margin-bottom: -5px;\
+}\
+")
 	.appendTo("head");
 }
 
@@ -586,4 +622,18 @@ var setup = function() {
 
 //PLUGIN END //////////////////////////////////////////////////////////
 
-@@PLUGINEND@@
+
+setup.info = plugin_info; //add the script info data to the function as a property
+if(!window.bootPlugins) window.bootPlugins = [];
+window.bootPlugins.push(setup);
+// if IITC has already booted, immediately run the 'setup' function
+if(window.iitcLoaded && typeof setup === 'function') setup();
+} // wrapper end
+// inject code into site context
+var script = document.createElement('script');
+var info = {};
+if (typeof GM_info !== 'undefined' && GM_info && GM_info.script) info.script = { version: GM_info.script.version, name: GM_info.script.name, description: GM_info.script.description };
+script.appendChild(document.createTextNode('('+ wrapper +')('+JSON.stringify(info)+');'));
+(document.body || document.head || document.documentElement).appendChild(script);
+
+
