@@ -7,55 +7,56 @@ Ingress Intel Total Conversion (IITC)
 [![LICENSE](https://img.shields.io/badge/license-ISC-blue.svg)](LICENSE)
 <!-- [END badges] -->
 
-> IITC is a browser add-on that modifies the Ingress intel map. It is faster than the standard site, and offers many more features. It is available for desktop browsers, such as Firefox and Chrome, and as a mobile application.
+> IITC是一个浏览器插件，可以修改Ingress intel地图。它比标准站点更快，并提供更多功能。它适用于桌面浏览器，如Firefox和Chrome，并提供移动应用程序。
 
-###### [Website](https://iitc.modos189.ru/) | [Documentation](http://iitc-ce.rtfd.io/) | [Telegram channel](https://teleg.run/iitc_news)
+###### [网站](https://iitc.modos189.ru/) | [文档](http://iitc-ce.rtfd.io/) | [Telegram 频道](https://teleg.run/iitc_news)
 
 ---
 
-Since the [breunigs](https://github.com/breunigs/ingress-intel-total-conversion) IITC branch was deleted and
-[Jon Atkins](https://github.com/jonatkins) has moved away from development,
-this repository was created by [modos189](https://github.com/modos189) to continue some development.
+由于[原IITC分支](https://github.com/breunigs/ingress-intel-total-conversion)被删除且 [Jon Atkins](https://github.com/jonatkins) 已停止开发，因此 [modos189](https://github.com/modos189) 创建了此存储库以继续进行一些开发。
 
-## Users
 
-Just want to download/install IITC? Go to
+## 用户
+
+只是想下载/安装 IITC? 前往
 https://iitc.modos189.ru/
 
-For keeping up with the latest news, release announcements, etc, Follow IITC on Telegram channel
+关注最新新闻,版本发布等,请关注 IITC 的 Telegram channel
 https://t.me/iitc_news
 
-Want to report a bug? Post it to the issues page
-https://github.com/IITC-CE/ingress-intel-total-conversion/issues
+想要报告一个bug？请提交到issues页面
+https://github.com/paizi/ingress-intel-total-conversion/issues
 
-## Developers
+## 开发者
 
-This Github page is for those interested in developing IITC further.
+下面的适合那些有兴趣进一步开发IITC的人。
 
-### Quickstart
+### 快速开始
 
-To build the browser scripts from source you will need Python (either a late version 2.x, or 3.0+). It should
-build correctly on Linux and Windows (and, probably, Macs, FreeBSD, etc)
+要使用源代码构建浏览器脚本，您需要使用Python（最新版本2.x或3.0+）。
+这应该可以在Linux和Windows上正确构建（可能还有Mac，FreeBSD等）
 
-Fork this project, clone to your local machine.
+请fork此项目，并clone到本地计算机。
 
-Run the `build.py local` script to build the code.
+运行 `build.py local` 来构建代码。
 
-If all goes well, output of the build will end up in `build/local` subfolder.
+如果一切顺利，构建的输出将出现在`build/local`子文件夹中。
 
-You can create a custom build settings file, `localbuildsettings.py` - look in the supplied
-`buildsettings.py` for details.
+您还可以创建一个自定义构建配置文件：`localbuildsettings.py`  - 查看提供的内容
+`buildsettings.py`了解详情。
 
-### Mobile
 
-To build the mobile app, along with python, you will need
+### 移动应用程序
 
-- The Java JDK (development kit - the runtime JRE is not enough)
-- The Android SDK
+要构建移动应用程序，您将需要
 
-Run `build.py mobile` to build IITC Mobile in debug mode.
+ -  Java JDK（开发工具包 - JRE是不够的）
+ -  Android SDK
 
-### Website
+运行`build.py mobile`，在debug模式下构建IITC Mobile。
 
-The source codes of the iitc.modos189.ru site are in a nearby repository:
+
+### 网站
+
+iitc.modos189.ru 网站的源码保存在另外一个存储库中:
 https://github.com/IITC-CE/iitc.modos189.ru
