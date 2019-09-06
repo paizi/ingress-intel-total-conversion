@@ -29,7 +29,7 @@ https://github.com/paizi/ingress-intel-total-conversion/issues
 
 ## 开发者
 
-下面的适合那些有兴趣进一步开发IITC的人。
+下面的内容适合那些有兴趣进一步开发IITC的人。
 
 ### 快速开始
 
